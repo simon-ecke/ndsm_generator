@@ -198,12 +198,15 @@ def run_pipeline(dsm_path: str,
                  ndsm_save_path: Optional[str] = None,
                  buffer_m: float = 2.0,
                  pixel_m: float = 1.0,
+                 resampling: str = "bilinear",
                  user: Optional[str] = None,
                  password: Optional[str] = None,
                  allow_prompt: bool = True) -> Tuple[str, Optional[str]]:
     """
     Orchestrate: AOI -> WCS download -> align -> (optional) nDSM.
     Returns (aligned_dtm_path, ndsm_path or None).
+    
+    resampling: 'bilinear' (default, recommended), 'cubic' (highest quality), or 'nearest' (preserves values)
     """
     user, password = get_credentials(user, password, allow_prompt=allow_prompt)
     print("[1/4] Computing AOI from DSM (EPSG:25832)…")
@@ -213,8 +216,8 @@ def run_pipeline(dsm_path: str,
     wcs_download_dgm1(minx, miny, maxx, maxy, dtm_save_path, user, password, pixel_m=pixel_m)
     print(f"      Saved DTM: {dtm_save_path}")
     aligned_path = os.path.splitext(dtm_save_path)[0] + "_aligned_to_DSM.tif"
-    print("[3/4] Aligning DTM to DSM grid…")
-    align_to_dsm_grid(dtm_save_path, dsm_path, aligned_path, resampling="bilinear")
+    print(f"[3/4] Aligning DTM to DSM grid (resampling: {resampling})…")
+    align_to_dsm_grid(dtm_save_path, dsm_path, aligned_path, resampling=resampling)
     ndsm_path_written = None
     if ndsm_save_path:
         print("[4/4] Computing nDSM = DSM − DTM…")
