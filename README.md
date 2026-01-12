@@ -6,19 +6,19 @@ Generate **normalized Digital Surface Models (nDSM)** by automatically downloadi
 
 ---
 
-## 📋 Features
+## Features
 
-- 🌍 **Automatic DTM download** from Bavaria's INSPIRE WCS service (DGM1, 1m resolution)
-- 📐 **CRS-aware processing** — works with DSMs in any coordinate system
-- 🎯 **Precise grid alignment** — DTM is resampled to match your DSM's exact pixel grid
-- 🔄 **Batch processing** — process multiple DSM files in one go
-- 🔐 **Secure credential handling** via environment variables
-- 🎨 **Flexible resampling** — choose between nearest, bilinear, or cubic resampling
-- 💾 **Optimized output** — compressed GeoTIFF files with proper nodata handling
+- Automatic DTM download from Bavaria's INSPIRE WCS service (DGM1, 1m resolution)
+- CRS-aware processing — works with DSMs in any coordinate system
+- Precise grid alignment — DTM is resampled to match your DSM's exact pixel grid
+- Batch processing — process multiple DSM files in one go
+- Secure credential handling via environment variables
+- Flexible resampling — choose between nearest, bilinear, or cubic resampling
+- Optimized output — compressed GeoTIFF files with proper nodata handling
 
 ---
 
-## 🗂️ Repository Structure
+## Repository Structure
 
 ```
 18_nDSM_generator/
@@ -26,29 +26,35 @@ Generate **normalized Digital Surface Models (nDSM)** by automatically downloadi
 ├── ndsm_generator_batch.ipynb    # Batch processing for multiple DSMs
 ├── modules/
 │   └── ndsm_tools.py             # Core processing functions
+├── requirements.txt              # Python dependencies
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start
+## Installation
 
 ### Prerequisites
 
 - Python 3.8+
 - Valid credentials for Bavaria's geodata service (LDBV)
-- Required packages:
-  ```bash
-  pip install requests rasterio shapely numpy
-  ```
 
-### Setup Credentials
+### Setup
 
-**Option 1: Environment Variables (Recommended)**
+1. Clone the repository:
+3. Set up credentials in your conda environment (recommended):
+   ```bash
+   conda activate your_env
+   conda env config vars set LDBV_USER="your_username" LDBV_PASS="your_password"
+   conda deactivate && conda activate your_env
+   ```
 
-Set credentials in your conda environment:
-```bash
+   Alternatively, the notebooks will prompt for credentials if environment variables are not set.
+
+---
+
+``bash
 conda activate your_env
 conda env config vars set LDBV_USER="your_username" LDBV_PASS="your_password"
 conda deactivate && conda activate your_env
@@ -70,7 +76,7 @@ The notebooks will prompt for credentials if environment variables are not set.
 
 1. Open `ndsm_generator_batch.ipynb`
 2. Configure:
-   - `DSM_FOLDER` — folder containing DSM files
+    `DSM_FOLDER` — folder containing DSM files
    - `OUTPUT_FOLDER` — where to save nDSM (CHM) files
    - `DTM_OUTPUT_FOLDER` — where to save DTM files
    - `DSM_PATTERN` — file pattern (e.g., `"*_DSM.tif"`)
@@ -78,7 +84,7 @@ The notebooks will prompt for credentials if environment variables are not set.
 
 ---
 
-## 📊 What Gets Produced
+## Output Products
 
 For each DSM, the pipeline generates:
 
@@ -88,7 +94,7 @@ For each DSM, the pipeline generates:
 
 ---
 
-## 🔧 How It Works
+## How It Works
 
 ```mermaid
 graph LR
@@ -110,7 +116,7 @@ graph LR
 
 ---
 
-## 🎛️ Configuration Options
+## Configuration Options
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -127,18 +133,18 @@ graph LR
 
 ---
 
-## 📜 Data Source & License
+## Data Source & License
 
 **DTM Source**: DGM1 — *Bayerische Vermessungsverwaltung* (LDBV)  
 **License**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)  
 **Service**: INSPIRE WCS 2.0.1
 
-⚠️ **Attribution Required**: Please cite the data source in any publications or products:
+**Attribution Required**: Please cite the data source in any publications or products:
 > *"Digitales Geländemodell - Bayerische Vermessungsverwaltung (www.geodaten.bayern.de), CC BY 4.0"*
 
 ---
 
-## 🔐 Credentials
+## Credentials
 
 Access to Bavaria's WCS service requires authentication. To obtain credentials:
 
@@ -148,7 +154,7 @@ Access to Bavaria's WCS service requires authentication. To obtain credentials:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### WCS Download Fails
 
@@ -168,7 +174,7 @@ Access to Bavaria's WCS service requires authentication. To obtain credentials:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 - Report bugs or issues
@@ -177,16 +183,12 @@ Contributions are welcome! Feel free to:
 
 ---
 
-## 📄 License
+## License
 
 This code is provided as-is for processing elevation data. Please respect the data license (CC BY 4.0) when using DGM1 products.
 
 ---
 
-## 📧 Contact
+## Contact
 
 For questions about Bavaria's geodata services, visit [geodaten.bayern.de](https://geodaten.bayern.de/)
-
----
-
-**Happy mapping! 🗺️**
