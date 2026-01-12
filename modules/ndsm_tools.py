@@ -201,21 +201,33 @@ def run_pipeline(dsm_path: str,
                  resampling: str = "bilinear",
                  user: Optional[str] = None,
                  password: Optional[str] = None,
-                 allow_prompt: bool = True) -> Tuple[str, Optional[str]]:
+                 allow_prompt: bool = True,
+                 dtm_output_folder: Optional[str] = None) -> Tuple[str, Optional[str]]:
     """
     Orchestrate: AOI -> WCS download -> align -> (optional) nDSM.
     Returns (aligned_dtm_path, ndsm_path or None).
     
     resampling: 'bilinear' (default, recommended), 'cubic' (highest quality), or 'nearest' (preserves values)
+    dtm_output_folder: Optional separate folder for DTM files. If provided, both raw and aligned DTM will be saved here.
+                       If None, uses the folder from dtm_save_path.
     """
     user, password = get_credentials(user, password, allow_prompt=allow_prompt)
     print("[1/4] Computing AOI from DSM (EPSG:25832)…")
     minx, miny, maxx, maxy = dsm_aoi_bounds_25832(dsm_path, buffer_m)
     print(f"      AOI: {minx:.3f}, {miny:.3f}, {maxx:.3f}, {maxy:.3f} (buffer {buffer_m} m)")
     print("[2/4] Downloading DGM1 via WCS 2.0.1…")
+    
+    # If dtm_output_folder is specified, update dtm_save_path to use that folder
+    if dtm_output_folder:
+        os.makedirs(dtm_output_folder, exist_ok=True)
+        dtm_filename = os.path.basename(dtm_save_path)
+        dtm_save_path = os.path.join(dtm_output_folder, dtm_filename)
+    
     wcs_download_dgm1(minx, miny, maxx, maxy, dtm_save_path, user, password, pixel_m=pixel_m)
     print(f"      Saved DTM: {dtm_save_path}")
-    aligned_path = os.path.splitext(dtm_save_path)[0] + "_aligned_to_DSM.tif"
+    # Create aligned path by replacing .tif with _aligned_to_DSM.tif
+    base, ext = os.path.splitext(dtm_save_path)
+    aligned_path = base + "_aligned_to_DSM" + ext
     print(f"[3/4] Aligning DTM to DSM grid (resampling: {resampling})…")
     align_to_dsm_grid(dtm_save_path, dsm_path, aligned_path, resampling=resampling)
     ndsm_path_written = None
